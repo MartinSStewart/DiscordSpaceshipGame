@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spaceship.Terminals
+namespace Spaceship
 {
-    public static class TerminalEx
+    public static class TextUi
     {
         /// <summary>
         /// Iterates through every element of a 2 dimensional array, left to right, top to bottom.
@@ -44,7 +44,7 @@ namespace Spaceship.Terminals
 
         public static void Write(this char[,] charArray, string text, Int2 position)
         {
-            if (position.Y >= charArray.GetLength(1))
+            if (position.Y < charArray.GetLength(1))
             {
                 var x = position.X;
                 var y = position.Y;
@@ -94,16 +94,19 @@ namespace Spaceship.Terminals
         public static void DrawRectangleOutline(this char[,] charArray, char rectangleChar, Int2 start, Int2 end)
         {
             var (min, max) = charArray.GetBounds(start, end);
+
+            var outlineMin = Int2.ComponentMin(start, end);
+            var outlineMax = Int2.ComponentMax(start, end);
+
             for (int x = min.X; x < max.X; x++)
             {
-                charArray[x, min.Y] = rectangleChar;
-                charArray[x, max.Y] = rectangleChar;
-            }
-
-            for (int y = min.Y; y < max.Y; y++)
-            {
-                charArray[min.X, y] = rectangleChar;
-                charArray[max.X, y] = rectangleChar;
+                for (int y = min.Y; y < max.Y; y++)
+                {
+                    if (x == outlineMin.X || x == outlineMax.X - 1 || y == outlineMin.Y || y == outlineMax.Y - 1)
+                    {
+                        charArray[x, y] = rectangleChar;
+                    }
+                }
             }
         }
 
@@ -112,7 +115,7 @@ namespace Spaceship.Terminals
                 Int2.ComponentMin(start, end), 
                 new Int2()), 
             Int2.ComponentMin(
-                Int2.ComponentMax(start, end) + new Int2(1, 1),
+                Int2.ComponentMax(start, end),
                 new Int2(
                     charArray.GetLength(0), 
                     charArray.GetLength(1))));

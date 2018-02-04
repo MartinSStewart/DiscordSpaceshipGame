@@ -12,6 +12,7 @@ namespace FixMath.NET
         public int Y { get; }
 
         public Fix Length => Fix.Sqrt(X * X + Y * Y);
+        public int Area => X * Y;
 
         public Int2(int x, int y)
         {

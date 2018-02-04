@@ -129,6 +129,27 @@ namespace Spaceship
             void SayHi(IMessage message) =>
                 message.ReplyWith($"{new[] { "Hello", "Hi", "Salutations", "Greetings" }.RandomSubset(1).First()}, {message.Author.Username}.");
 
+            State StartSim(State state, CommandData data)
+            {
+                if (data.Message.Author.Id == OwnerId)
+                {
+                    if (state.IsStarted)
+                    {
+                        data.Message.ReplyWith("Simulation is already in progress.");
+                    }
+                    else
+                    {
+                        data.Message.ReplyWith("Beginning simulation");
+                        foreach (var player in state.Players.Where(item => item.GetRole(state).HasChannel))
+                        {
+                            CreateChannelAsync(player.GetRole(state).Name + "s-terminal", player.UserId);
+                        }
+                        return state.With(true);
+                    }
+                }
+                return state;
+            }
+
             var commands = new[]
             {
                 new Command("hi", (state, data) => SayHi(data.Message)),
@@ -201,27 +222,15 @@ namespace Spaceship
                     "get role",
                     (state, data) => data.Message.ReplyWith(
                         $"{data.Message.Author.Username}, your role is {data.Message.GetPlayer(state).GetRole(state).Name}")),
+                new Command("start sim", StartSim),
+
                 new Command(
-                    "start sim",
+                    "debug",
                     (state, data) =>
                     {
-                        if (data.Message.Author.Id == OwnerId)
-                        {
-                            if (state.IsStarted)
-                            {
-                                data.Message.ReplyWith("Simulation is already in progress.");
-                            }
-                            else
-                            {
-                                data.Message.ReplyWith("Beginning simulation");
-                                foreach (var player in state.Players.Where(item => item.GetRole(state).HasChannel))
-                                {
-                                    CreateChannelAsync(player.GetRole(state).Name + "s-terminal", player.UserId);
-                                }
-                                return state.With(true);
-                            }
-                        }
-                        return state;
+                        return StartSim(state.Set(
+                            p => p.Players[0].RoleId, 
+                            state.Roles.First(item => item.Name == "Helmsman").Id), data);
                     })
             }.ToImmutableList();
 
@@ -237,10 +246,14 @@ namespace Spaceship
         public async static Task CreateChannelAsync(string channelName, ulong userId)
         {
             var channel = await Guild.CreateTextChannelAsync(channelName, new RequestOptions());
+            
 
             SetState(state =>
             {
                 var index = state.Players.FindIndex(item => item.UserId == userId);
+
+                state = state.Players[index].GetRole(state).Terminal.Initialize(state, channel);
+
                 return index == -1 ?
                     state :
                     state.Set(

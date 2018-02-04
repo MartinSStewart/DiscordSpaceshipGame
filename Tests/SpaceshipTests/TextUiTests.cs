@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Spaceship.Terminals;
 using FixMath.NET;
+using Spaceship;
 
 namespace DiscordBotTests.SpaceshipTests
 {
     [TestFixture]
-    public class TerminalTests
+    public class TextUiTests
     {
         [Test]
         public void UiFill()
@@ -21,12 +21,15 @@ namespace DiscordBotTests.SpaceshipTests
             Assert.IsTrue(ui.ToEnumerable().All(item => item == 'X'));
         }
 
-        [Test]
-        public void UiDrawRectangle()
+        [TestCase(1, 1, 7, 4)]
+        [TestCase(7, 4, 1, 1)]
+        [TestCase(7, 1, 1, 4)]
+        [TestCase(1, 4, 7, 1)]
+        public void UiDrawRectangle(int x0, int y0, int x1, int y1)
         {
             var ui = new char[4, 5];
             ui.Fill('.');
-            ui.DrawRectangle('X', new Int2(1, 1), new Int2(6, 3));
+            ui.DrawRectangle('X', new Int2(x0, y0), new Int2(x1, y1));
 
             var expected = 
 @"....
@@ -40,12 +43,15 @@ namespace DiscordBotTests.SpaceshipTests
             Assert.AreEqual(expected, result);
         }
 
-        [Test]
-        public void UiDrawRectangleOutline()
+        [TestCase(1, 1, 7, 4)]
+        [TestCase(7, 4, 1, 1)]
+        [TestCase(7, 1, 1, 4)]
+        [TestCase(1, 4, 7, 1)]
+        public void UiDrawRectangleOutline(int x0, int y0, int x1, int y1)
         {
             var ui = new char[4, 5];
             ui.Fill('.');
-            ui.DrawRectangleOutline('X', new Int2(1, 1), new Int2(6, 3));
+            ui.DrawRectangleOutline('X', new Int2(x0, y0), new Int2(x1, y1));
 
             var expected =
 @"....

@@ -208,6 +208,7 @@
   <ItemGroup>
     <Compile Include="Command.cs" />
     <Compile Include="CommandData.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="DebugEx.cs" />
     <Compile Include="LinqEx.cs" />
     <Compile Include="Model\ICollidable.cs" />

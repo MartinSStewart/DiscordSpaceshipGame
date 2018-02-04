@@ -4,6 +4,7 @@ namespace Spaceship.Model
 {
     
     using Equ;
+    using FixMath.NET;
     using Lens;
     using System;
     using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Spaceship.Model
 
     public partial class Player
     {
-        public Player With(ulong? userId = null, Id<Role> roleId = null, string firstName = null, string lastName = null, Maybe<ulong>? channelId = null, Id<Ship> shipId = null)
+        public Player With(ulong? userId = null, Id<Role> roleId = null, string firstName = null, string lastName = null, Maybe<ulong>? channelId = null, Id<Ship> shipId = null, Int2? terminalSize = null)
         {
             var clone = (Player)MemberwiseClone();
 
@@ -24,8 +25,13 @@ namespace Spaceship.Model
             clone.LastName = lastName ?? LastName;
             clone.ChannelId = channelId ?? ChannelId;
             clone.ShipId = shipId ?? ShipId;
+            clone.TerminalSize = terminalSize ?? TerminalSize;
 
-            
+            if (!clone.IsValid())
+            {
+                DebugEx.Fail();
+            }
+
             return clone;
         }
     }
