@@ -83,7 +83,7 @@ namespace DiscordBotTests
 
         public Task<IUserMessage> SendMessageAsync(string text, bool isTTS = false, Embed embed = null, RequestOptions options = null)
         {
-            var message = new MockMessage(CurrentUser, this, text);
+            var message = new MockMessage((MockUser)CurrentUser, this, text);
             return new Task<IUserMessage>(() => (IUserMessage)message);
         }
 
@@ -92,6 +92,6 @@ namespace DiscordBotTests
             throw new NotImplementedException();
         }
 
-        public List<IMessage> MessagesSent { get; } = new List<IMessage>();
+        public List<MockMessage> MessagesSent { get; } = new List<MockMessage>();
     }
 }

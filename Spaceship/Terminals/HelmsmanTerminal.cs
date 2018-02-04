@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,21 @@ namespace Spaceship.Terminals
 {
     public class HelmsmanTerminal : ITerminal
     {
+        public ImmutableList<Command> Commands { get; } = new[]
+        {
+            new Command(
+                "set heading",
+                (state, data) =>
+                {
+                    if (Fix.TryParse(data.ContentWithoutPrefix, out Fix heading))
+                    {
+
+                    }
+                    return state;
+                })
+        }.ToImmutableList();
+
+
         public State Initialize(State currentState, ITextChannel channel)
         {
             channel.SendMessageAsync(@"```
@@ -50,11 +66,9 @@ namespace Spaceship.Terminals
 
             ui.Write($"HEADING {ship.Direction}°", new Int2(2, screenEnd.Y + 1));
             ui.Write($"SPEED   {ship.Velocity.Length} m/s", new Int2(2, screenEnd.Y + 2));
-            ui.Write($"> {content}", new Int2(2, screenEnd.Y + 2));
+            ui.Write($"> {content}", new Int2(2, screenEnd.Y + 4));
 
             message.Channel.SendMessageAsync($"```{ui.GetText()}```");
-
-            
 
             return currentState;
         }

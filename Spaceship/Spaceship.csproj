@@ -225,7 +225,7 @@
     <Compile Include="Terminals\BrokenTerminal.cs" />
     <Compile Include="Terminals\HelmsmanTerminal.cs" />
     <Compile Include="Terminals\ITerminal.cs" />
-    <Compile Include="Terminals\TerminalEx.cs" />
+    <Compile Include="TextUi.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

@@ -91,7 +91,7 @@ namespace Spaceship
             {
                 SetState(state => state.Set(
                     p => p.Players,
-                    v => v.Add(new Player(state.DefaultRole.Id, state.DefaultShip).With(arg.Id))));
+                    v => v.Add(new Player(arg.Id, state.DefaultRole.Id, state.DefaultShipId))));
             }
         }
 

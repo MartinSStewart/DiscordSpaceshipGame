@@ -27,12 +27,12 @@ namespace Spaceship.Model
 
         public ImmutableHashSet<ICollidable> Collidables { get; private set; } = ImmutableHashSet<ICollidable>.Empty;
 
-        public Id<Ship> DefaultShip { get; }
+        public Id<Ship> DefaultShipId { get; }
 
         public State()
         {
             var playerShip = new Ship();
-            DefaultShip = playerShip.Id;
+            DefaultShipId = playerShip.Id;
             Collidables = Collidables.Add(playerShip);
         }
 

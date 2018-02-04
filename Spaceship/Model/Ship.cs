@@ -25,6 +25,7 @@ namespace Spaceship.Model
         /// Ship heading in radians.
         /// </summary>
         public Fix Direction { get; private set; }
+        public Fix TargetDirection { get; private set; }
         /// <summary>
         /// Ship size in meters.
         /// </summary>

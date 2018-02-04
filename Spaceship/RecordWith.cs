@@ -15,11 +15,10 @@ namespace Spaceship.Model
 
     public partial class Player
     {
-        public Player With(ulong? userId = null, Id<Role> roleId = null, string firstName = null, string lastName = null, Maybe<ulong>? channelId = null, Id<Ship> shipId = null, Int2? terminalSize = null)
+        public Player With(Id<Role> roleId = null, string firstName = null, string lastName = null, Maybe<ulong>? channelId = null, Id<Ship> shipId = null, Int2? terminalSize = null)
         {
             var clone = (Player)MemberwiseClone();
 
-            clone.UserId = userId ?? UserId;
             clone.RoleId = roleId ?? RoleId;
             clone.FirstName = firstName ?? FirstName;
             clone.LastName = lastName ?? LastName;
@@ -81,13 +80,14 @@ namespace Spaceship.Model
 
     public partial class Ship
     {
-        public Ship With(Fix2? position = null, Fix2? velocity = null, Fix? direction = null)
+        public Ship With(Fix2? position = null, Fix2? velocity = null, Fix? direction = null, Fix? targetDirection = null)
         {
             var clone = (Ship)MemberwiseClone();
 
             clone.Position = position ?? Position;
             clone.Velocity = velocity ?? Velocity;
             clone.Direction = direction ?? Direction;
+            clone.TargetDirection = targetDirection ?? TargetDirection;
 
             if (!clone.IsValid())
             {

@@ -12,7 +12,7 @@ namespace Spaceship.Model
 {
     public partial class Player : MemberwiseEquatable<Player>, IState
     {
-        public ulong UserId { get; private set; }
+        public ulong UserId { get; }
         public Id<Role> RoleId { get; private set; }
         public string FirstName { get; private set; } = "Default";
         public string LastName { get; private set; } = "Name";
@@ -23,8 +23,9 @@ namespace Spaceship.Model
         public Id<Ship> ShipId { get; private set; }
         public Int2 TerminalSize { get; private set; } = new Int2(63, 28);
 
-        public Player(Id<Role> roleId, Id<Ship> shipId)
+        public Player(ulong userId, Id<Role> roleId, Id<Ship> shipId)
         {
+            UserId = userId;
             RoleId = roleId;
             ShipId = shipId;
         }

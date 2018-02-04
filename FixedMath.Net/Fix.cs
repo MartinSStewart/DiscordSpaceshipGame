@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace FixMath.NET
 {
@@ -145,6 +146,18 @@ namespace FixMath.NET
                 diff = xl < 0 ? MIN_VALUE : MAX_VALUE;
             }
             return new Fix(diff);
+        }
+
+        public static bool TryParse(string s, out Fix result)
+        {
+            var canParse = double.TryParse(s, out double value);
+            if (value > MAX_VALUE || value < MIN_VALUE)
+            {
+                result = 0;
+                return false;
+            }
+            result = (Fix)value;
+            return canParse;
         }
 
         /// <summary>
@@ -434,8 +447,7 @@ namespace FixMath.NET
         /// Performance: about 25% slower than Math.Sin() in x64, and 200% slower in x86.
         /// </summary>
         public static Fix Sin(Fix x) {
-            bool flipHorizontal, flipVertical;
-            var clampedL = ClampSinValue(x.m_rawValue, out flipHorizontal, out flipVertical);
+            var clampedL = ClampSinValue(x.m_rawValue, out bool flipHorizontal, out bool flipVertical);
             var clamped = new Fix(clampedL);
 
             // Find the two closest values in the LUT and perform linear interpolation
@@ -463,8 +475,7 @@ namespace FixMath.NET
         /// however its accuracy is limited to 4-5 decimals, for small enough values of x.
         /// </summary>
         public static Fix FastSin(Fix x) {
-            bool flipHorizontal, flipVertical;
-            var clampedL = ClampSinValue(x.m_rawValue, out flipHorizontal, out flipVertical);
+            var clampedL = ClampSinValue(x.m_rawValue, out bool flipHorizontal, out bool flipVertical);
 
             // Here we use the fact that the SinLut table has a number of entries
             // equal to (PI_OVER_2 >> 15) to use the angle to index directly into it

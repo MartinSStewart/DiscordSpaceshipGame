@@ -43,7 +43,7 @@ namespace DiscordBotTests
 
         public ulong Id => throw new NotImplementedException();
 
-        public MockMessage(IUser author, MockMessageChannel channel, string content)
+        public MockMessage(MockUser author, MockMessageChannel channel, string content)
         {
             Author = author;
             Channel = channel;
