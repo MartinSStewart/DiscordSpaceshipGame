@@ -32,7 +32,7 @@ namespace DiscordBotTests.SpaceshipTests
                 true,
                 _state.Players.Add(new Player(_user.Id, role.Id, _state.DefaultShipId)));
 
-            _terminal = (HelmsmanTerminal)role.Terminal;
+            _terminal = (HelmsmanTerminal)role.CreateTerminal(_channel, _state.Players[0].Id);
         }
 
         [Test]

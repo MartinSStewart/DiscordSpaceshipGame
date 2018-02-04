@@ -247,18 +247,16 @@ namespace Spaceship
         {
             var channel = await Guild.CreateTextChannelAsync(channelName, new RequestOptions());
             
-
             SetState(state =>
             {
-                var index = state.Players.FindIndex(item => item.UserId == userId);
+                var player = state.Players.SingleOrDefault(item => item.UserId == userId);
+                var role = player.GetRole(state);
 
-                state = state.Players[index].GetRole(state).Terminal.Initialize(state, channel);
-
-                return index == -1 ?
+                return player == null ?
                     state :
                     state.Set(
-                        p => p.Players[index].ChannelId,
-                        channel.Id.ToMaybe());
+                        p => p.Terminals,
+                        v => v.Add(role.CreateTerminal(channel, player.Id)));
             });
         }
 
@@ -276,33 +274,29 @@ namespace Spaceship
                 return;
             }
 
+            // If the message was sent in the general channel when we find which command it uses here.
             if (arg.Channel.Id == GeneralChannel.Id)
             {
-                var userMessage = arg.Content.ToLower().Trim();
-
-                SetState(state =>
-                {
-                    var newState = state;
-                    foreach (var command in Commands.Where(item => userMessage == item.Prefix || userMessage.StartsWith(item.Prefix + " ")))
-                    {
-                        newState = command.CommandFunc(state, new CommandData(arg, command.Prefix));
-                    }
-                    return newState;
-                });
+                SetState(state => ExecuteCommands(Commands, state, arg));
                 return;
             }
 
-            SetState(state =>
-            {
-                var player = GetPlayer(arg, state);
-                if (arg.Channel.Id.ToMaybe() == player.ChannelId)
-                {
-                    return player.GetRole(GameState).Terminal.MessageRecieved(state, arg);
-                }
-                return state;
-            });
+            // Otherwise we find the relevent terminal and let it handle the message.
+            SetState(state => state.Terminals.SingleOrDefault(item => item.Channel.Id == arg.Channel.Id)?.MessageRecieved(state, arg) ?? state);
 
             return;
+        }
+
+        public static State ExecuteCommands(IEnumerable<Command> commands, State state, IMessage message)
+        {
+            var userMessage = message.Content.ToLower().Trim();
+
+            var newState = state;
+            foreach (var command in Commands.Where(item => userMessage == item.Prefix || userMessage.StartsWith(item.Prefix + " ")))
+            {
+                newState = command.CommandFunc(state, new CommandData(message, command.Prefix));
+            }
+            return newState;
         }
 
         private static void SetState(Func<State, State> stateChange)

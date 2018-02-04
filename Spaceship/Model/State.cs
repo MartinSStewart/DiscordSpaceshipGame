@@ -17,15 +17,16 @@ namespace Spaceship.Model
         public ImmutableList<Role> Roles { get; private set; } = new[] {
             new Role().With("Spectator", "Just spectating!"),
             new Role().With("Captain", "Issues commands to the rest of the crew.", 1),
-            new Role().With("Nuclear Technician", "Maintains the ship's power systems.", 0, new HelmsmanTerminal()),
-            new Role().With("Weapons Officer", "Controls the ship's mounted weaponry.", 1, new HelmsmanTerminal()),
-            new Role().With("Radar Operator", "Monitors and identifies objects nearby the spaceship.", 1, new HelmsmanTerminal()),
-            new Role().With("Helmsman", "Steers the spaceship.", 0, new HelmsmanTerminal())
+            new Role().With("Nuclear Technician", "Maintains the ship's power systems.", 0, (channelId, playerId) => new HelmsmanTerminal(channelId, playerId)),
+            new Role().With("Weapons Officer", "Controls the ship's mounted weaponry.", 1, (channelId, playerId) => new HelmsmanTerminal(channelId, playerId)),
+            new Role().With("Radar Operator", "Monitors and identifies objects nearby the spaceship.", 1, (channelId, playerId) => new HelmsmanTerminal(channelId, playerId)),
+            new Role().With("Helmsman", "Steers the spaceship.", 0, (channelId, playerId) => new HelmsmanTerminal(channelId, playerId))
         }.ToImmutableList();
 
         public Role DefaultRole => Roles.First();
 
-        public ImmutableHashSet<ICollidable> Collidables { get; private set; } = ImmutableHashSet<ICollidable>.Empty;
+        public ImmutableList<Ship> Ships { get; private set; } = ImmutableList<Ship>.Empty;
+        public ImmutableList<Terminal> Terminals { get; private set; } = ImmutableList<Terminal>.Empty;
 
         public Id<Ship> DefaultShipId { get; }
 
@@ -33,7 +34,7 @@ namespace Spaceship.Model
         {
             var playerShip = new Ship();
             DefaultShipId = playerShip.Id;
-            Collidables = Collidables.Add(playerShip);
+            Ships = Ships.Add(playerShip);
         }
 
         public bool IsValid() =>

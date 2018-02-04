@@ -15,14 +15,13 @@ namespace Spaceship.Model
 
     public partial class Player
     {
-        public Player With(Id<Role> roleId = null, string firstName = null, string lastName = null, Maybe<ulong>? channelId = null, Id<Ship> shipId = null, Int2? terminalSize = null)
+        public Player With(Id<Role> roleId = null, string firstName = null, string lastName = null, Id<Ship> shipId = null, Int2? terminalSize = null)
         {
             var clone = (Player)MemberwiseClone();
 
             clone.RoleId = roleId ?? RoleId;
             clone.FirstName = firstName ?? FirstName;
             clone.LastName = lastName ?? LastName;
-            clone.ChannelId = channelId ?? ChannelId;
             clone.ShipId = shipId ?? ShipId;
             clone.TerminalSize = terminalSize ?? TerminalSize;
 
@@ -39,6 +38,7 @@ namespace Spaceship.Model
 namespace Spaceship.Model
 {
     
+    using Discord;
     using Equ;
     using Lens;
     using Spaceship.Terminals;
@@ -51,14 +51,14 @@ namespace Spaceship.Model
 
     public partial class Role
     {
-        public Role With(string name = null, string description = null, uint? maxSlots = null, ITerminal terminal = null)
+        public Role With(string name = null, string description = null, uint? maxSlots = null, Func<ITextChannel, Id<Player>, Terminal> createTerminal = null)
         {
             var clone = (Role)MemberwiseClone();
 
             clone.Name = name ?? Name;
             clone.Description = description ?? Description;
             clone.MaxSlots = maxSlots ?? MaxSlots;
-            clone.Terminal = terminal ?? Terminal;
+            clone.CreateTerminal = createTerminal ?? CreateTerminal;
 
             
             return clone;
@@ -80,7 +80,7 @@ namespace Spaceship.Model
 
     public partial class Ship
     {
-        public Ship With(Fix2? position = null, Fix2? velocity = null, Fix? direction = null, Fix? targetDirection = null)
+        public Ship With(Fix2? position = null, Fix2? velocity = null, Fix? direction = null, Fix? targetDirection = null, Fix? targetSpeed = null, Fix? maxTargetSpeed = null)
         {
             var clone = (Ship)MemberwiseClone();
 
@@ -88,6 +88,8 @@ namespace Spaceship.Model
             clone.Velocity = velocity ?? Velocity;
             clone.Direction = direction ?? Direction;
             clone.TargetDirection = targetDirection ?? TargetDirection;
+            clone.TargetSpeed = targetSpeed ?? TargetSpeed;
+            clone.MaxTargetSpeed = maxTargetSpeed ?? MaxTargetSpeed;
 
             if (!clone.IsValid())
             {
@@ -114,14 +116,15 @@ namespace Spaceship.Model
 
     public partial class State
     {
-        public State With(bool? isStarted = null, ImmutableList<Player> players = null, ImmutableList<Role> roles = null, ImmutableHashSet<ICollidable> collidables = null)
+        public State With(bool? isStarted = null, ImmutableList<Player> players = null, ImmutableList<Role> roles = null, ImmutableList<Ship> ships = null, ImmutableList<Terminal> terminals = null)
         {
             var clone = (State)MemberwiseClone();
 
             clone.IsStarted = isStarted ?? IsStarted;
             clone.Players = players ?? Players;
             clone.Roles = roles ?? Roles;
-            clone.Collidables = collidables ?? Collidables;
+            clone.Ships = ships ?? Ships;
+            clone.Terminals = terminals ?? Terminals;
 
             if (!clone.IsValid())
             {

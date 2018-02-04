@@ -222,9 +222,8 @@
     <Compile Include="Model\Ship.cs" />
     <Compile Include="Model\State.cs" />
     <Compile Include="RecordWith.cs" />
-    <Compile Include="Terminals\BrokenTerminal.cs" />
     <Compile Include="Terminals\HelmsmanTerminal.cs" />
-    <Compile Include="Terminals\ITerminal.cs" />
+    <Compile Include="Terminals\Terminal.cs" />
     <Compile Include="TextUi.cs" />
   </ItemGroup>
   <ItemGroup>

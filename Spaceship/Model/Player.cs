@@ -10,16 +10,13 @@ using System.Threading.Tasks;
 
 namespace Spaceship.Model
 {
-    public partial class Player : MemberwiseEquatable<Player>, IState
+    public partial class Player : MemberwiseEquatable<Player>, IState, IId<Player>
     {
+        public Id<Player> Id { get; } = new Id<Player>();
         public ulong UserId { get; }
         public Id<Role> RoleId { get; private set; }
         public string FirstName { get; private set; } = "Default";
         public string LastName { get; private set; } = "Name";
-        /// <summary>
-        /// Channel this player uses as a terminal.
-        /// </summary>
-        public Maybe<ulong> ChannelId { get; private set; }
         public Id<Ship> ShipId { get; private set; }
         public Int2 TerminalSize { get; private set; } = new Int2(63, 28);
 
@@ -30,10 +27,9 @@ namespace Spaceship.Model
             ShipId = shipId;
         }
 
-        public Ship GetShip(State state) => 
-            state.Collidables.OfType<Ship>().First(item => item.Id == ShipId);
+        public Ship GetShip(State state) => state.Ships.FirstById(ShipId);
 
-        public Role GetRole(State state) => state.Roles.First(item => item.Id == RoleId);
+        public Role GetRole(State state) => state.Roles.FirstById(RoleId);
 
         public bool IsValid() => 
             TerminalSize.X > 0 && 

@@ -22,10 +22,12 @@ namespace Spaceship.Model
         /// </summary>
         public Fix2 Velocity { get; private set; }
         /// <summary>
-        /// Ship heading in radians.
+        /// Ship heading in radians. 0 degrees is north and increasing values move counter clockwise.
         /// </summary>
         public Fix Direction { get; private set; }
         public Fix TargetDirection { get; private set; }
+        public Fix TargetSpeed { get; private set; }
+        public Fix MaxTargetSpeed { get; private set; }
         /// <summary>
         /// Ship size in meters.
         /// </summary>

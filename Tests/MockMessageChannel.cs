@@ -8,7 +8,7 @@ using System.IO;
 
 namespace DiscordBotTests
 {
-    public class MockMessageChannel : IMessageChannel
+    public class MockMessageChannel : ITextChannel
     {
         public static IUser CurrentUser { get; set; }
 
@@ -92,6 +92,83 @@ namespace DiscordBotTests
             throw new NotImplementedException();
         }
 
+        public Task ModifyAsync(Action<TextChannelProperties> func, RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IInviteMetadata> CreateInviteAsync(int? maxAge = 1800, int? maxUses = null, bool isTemporary = false, bool isUnique = false, RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IReadOnlyCollection<IInviteMetadata>> GetInvitesAsync(RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ModifyAsync(Action<GuildChannelProperties> func, RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public OverwritePermissions? GetPermissionOverwrite(IRole role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public OverwritePermissions? GetPermissionOverwrite(IUser user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemovePermissionOverwriteAsync(IRole role, RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemovePermissionOverwriteAsync(IUser user, RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddPermissionOverwriteAsync(IRole role, OverwritePermissions permissions, RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddPermissionOverwriteAsync(IUser user, OverwritePermissions permissions, RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        IAsyncEnumerable<IReadOnlyCollection<IGuildUser>> IGuildChannel.GetUsersAsync(CacheMode mode, RequestOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IGuildUser> IGuildChannel.GetUserAsync(ulong id, CacheMode mode, RequestOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(RequestOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<MockMessage> MessagesSent { get; } = new List<MockMessage>();
+
+        public string Topic => throw new NotImplementedException();
+
+        public string Mention => throw new NotImplementedException();
+
+        public int Position => throw new NotImplementedException();
+
+        public IGuild Guild => throw new NotImplementedException();
+
+        public ulong GuildId => throw new NotImplementedException();
+
+        public IReadOnlyCollection<Overwrite> PermissionOverwrites => throw new NotImplementedException();
     }
 }
