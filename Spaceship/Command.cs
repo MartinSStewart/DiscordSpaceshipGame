@@ -38,5 +38,7 @@ namespace Spaceship
             DebugEx.Assert(
                 prefix.All(item => !char.IsUpper(item)),
                 "Prefixes must not have any upper case letters since messages are converted to lower case before comparing.");
+
+        public override string ToString() => Prefix;
     }
 }

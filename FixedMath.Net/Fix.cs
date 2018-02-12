@@ -9,7 +9,7 @@ namespace FixMath.NET
     /// <summary>
     /// Represents a Q31.32 fixed-point number.
     /// </summary>
-    public partial struct Fix : IEquatable<Fix>, IComparable<Fix> {
+    public partial struct Fix : IEquatable<Fix>, IComparable<Fix>, IFormattable {
         readonly long m_rawValue;
 
         // Precision of this type is 2^-32, that is 2,3283064365386962890625E-10
@@ -662,9 +662,17 @@ namespace FixMath.NET
             return m_rawValue.CompareTo(other.m_rawValue);
         }
 
-        public override string ToString() {
-            return ((decimal)this).ToString();
-        }
+        public override string ToString() =>
+            ((decimal)this).ToString();
+
+        public string ToString(string format) =>
+            ((decimal)this).ToString(format);
+
+        public string ToString(IFormatProvider formatProvider) =>
+            ((decimal)this).ToString(formatProvider);
+
+        public string ToString(string format, IFormatProvider formatProvider) =>
+            ((decimal)this).ToString(format, formatProvider);
 
         public static Fix FromRaw(long rawValue) {
             return new Fix(rawValue);

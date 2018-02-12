@@ -38,7 +38,7 @@ namespace DiscordBotTests.SpaceshipTests
         [Test]
         public void Test()
         {
-            _terminal.MessageRecieved(_state, new MockMessage(_user, _channel, "a"));
+            _terminal.MessageRecieved(_state, new MockMessage(_user, _channel, "set heading 100.123"));
 
             var botMessage = _channel.MessagesSent[1];
         }

@@ -135,3 +135,29 @@ namespace Spaceship.Model
         }
     }
 }
+
+namespace Spaceship.Terminals
+{
+    
+    using Lens;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    public partial class TextColumn
+    {
+        public TextColumn With(ICollection<string> text = null, TextAlignment? alignment = null, Maybe<int>? width = null)
+        {
+            var clone = (TextColumn)MemberwiseClone();
+
+            clone.Text = text ?? Text;
+            clone.Alignment = alignment ?? Alignment;
+            clone.Width = width ?? Width;
+
+            
+            return clone;
+        }
+    }
+}

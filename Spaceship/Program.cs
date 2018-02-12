@@ -292,7 +292,7 @@ namespace Spaceship
             var userMessage = message.Content.ToLower().Trim();
 
             var newState = state;
-            foreach (var command in Commands.Where(item => userMessage == item.Prefix || userMessage.StartsWith(item.Prefix + " ")))
+            foreach (var command in commands.Where(item => userMessage == item.Prefix || userMessage.StartsWith(item.Prefix + " ")))
             {
                 newState = command.CommandFunc(state, new CommandData(message, command.Prefix));
             }

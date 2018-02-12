@@ -1,6 +1,7 @@
 ﻿using Discord;
 using FixMath.NET;
 using Spaceship.Model;
+using Spaceship.Terminals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace Spaceship
 {
+    public enum TextAlignment { Left, Right }
+
     public static class TextUi
     {
         /// <summary>
@@ -42,11 +45,16 @@ namespace Spaceship
             return transpose;
         }
 
-        public static void Write(this char[,] charArray, string text, Int2 position)
+        public static void Write(this char[,] charArray, string text, Int2 position, TextAlignment alignment = TextAlignment.Left)
         {
+            int alignmentOffset(int i) => alignment == TextAlignment.Right
+                ? text.Skip(i).TakeWhile(item => item != '\n').Count()
+                : 0;
+
             if (position.Y < charArray.GetLength(1))
             {
-                var x = position.X;
+                var newText = text.Replace("\r", "");
+                var x = position.X - alignmentOffset(0);
                 var y = position.Y;
                 for (int i = 0; i < text.Length; i++)
                 {
@@ -56,15 +64,39 @@ namespace Spaceship
                     }
                     if (text[i] == '\n')
                     {
-                        x = position.X;
+                        x = position.X - alignmentOffset(i + 1);
                         y++;
                     }
-                    else if (text[i] != '\r')
+                    else 
                     {
                         charArray[x, y] = text[i];
                         x++;
                     }
                 }
+            }
+        }
+
+        public static void DrawTable(this char[,] charArray, ICollection<TextColumn> columns, Int2 topLeft)
+        {
+            var xOffset = 0;
+            foreach (var column in columns)
+            {
+                var width = column.Width.ValueOr(column.Text.Max(item => item.Length));
+                for (var cellIndex = 0; cellIndex < column.Text.Count; cellIndex++)
+                {
+                    var cell = column.Text.ElementAt(cellIndex);
+                    DebugEx.Assert(cell.All(item => item != '\n'), "Line breaks are not supported yet.");
+
+                    var rightAlignOffset = column.Alignment == TextAlignment.Right 
+                        ? width 
+                        : 0;
+                    charArray.Write(
+                        cell, 
+                        topLeft + new Int2(xOffset + rightAlignOffset, cellIndex), 
+                        column.Alignment);
+                }
+
+                xOffset += width + 1;
             }
         }
 

@@ -34,7 +34,7 @@ namespace Spaceship.Terminals
                         if (Fix.TryParse(data.ContentWithoutPrefix, out Fix heading))
                         {
                             var shipIndex = state.Ships.IndexById(player.ShipId);
-                            state.Set(p => p.Ships[shipIndex].TargetDirection, heading);
+                            state = state.Set(p => p.Ships[shipIndex].TargetDirection, heading);
 
                             var delta = heading - ship.Direction;
 
@@ -61,7 +61,7 @@ namespace Spaceship.Terminals
                         if (Fix.TryParse(data.ContentWithoutPrefix, out Fix speed))
                         {
                             var shipIndex = state.Ships.IndexById(player.ShipId);
-                            state.Set(p => p.Ships[shipIndex].TargetSpeed, speed);
+                            state = state.Set(p => p.Ships[shipIndex].TargetSpeed, speed);
 
                             var delta = speed - ship.Direction;
 
@@ -123,9 +123,13 @@ $@"Welcome, {player.FirstName} {player.LastName} to the
 
             ui.DrawRectangle(' ', screenStart, screenEnd);
 
-            ui.Write($"HEADING {ship.Direction}°", new Int2(2, screenEnd.Y + 1));
-            ui.Write($"SPEED   {ship.Velocity.Length} m/s", new Int2(2, screenEnd.Y + 2));
-            ui.Write($"> {message.Trim()}", new Int2(2, screenEnd.Y + 4));
+            var table = new[] {
+                new TextColumn().With(new[] { "", "HEADING", "SPEED" }, TextAlignment.Left),
+                new TextColumn().With(new[] { "CURRENT", $"{ship.Direction: 0}°", $"{ship.Velocity.Length: 0.#} m/s"}, TextAlignment.Right),
+                new TextColumn().With(new[] { "TARGET", $"{ship.TargetDirection: 0}°", $"{ship.TargetSpeed: 0.#} m/s" }, TextAlignment.Right)
+            };
+
+            ui.DrawTable(table, new Int2(1, screenEnd.Y + 1));
 
             return $"```{ui.GetText()}```";
         }

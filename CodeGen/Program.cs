@@ -13,7 +13,7 @@ namespace CodeGen
         {
             var text = "// This code was auto generated.\n\n" + WithGen.Generate(
                 args[0], 
-                new[] { "bool", "uint", "int", "long", "ulong", "float", "double", "Int32", "UInt32", "Int64", "UInt64", "Float", "Double", "NumRange", "Maybe", "Vector", "Fix", "Fix2", "Int2" });
+                new[] { "bool", "uint", "int", "long", "ulong", "float", "double", "Int32", "UInt32", "Int64", "UInt64", "Float", "Double", "NumRange", "Maybe", "Vector", "Fix", "Fix2", "Int2", "TextAlignment" });
 
             File.WriteAllText(args[1], text);
         }
